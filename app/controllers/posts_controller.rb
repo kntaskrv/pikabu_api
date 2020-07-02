@@ -23,10 +23,6 @@ class PostsController < ApplicationController
     end
   end
 
-  def files
-    @files || params[:files]
-  end
-
   def tags
     @tags || params[:tags].split(',')
   end

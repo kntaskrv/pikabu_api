@@ -1,0 +1,121 @@
+require:
+  - rubocop-rspec
+  - rubocop-performance
+  - rubocop-rails
+
+AllCops:
+  Exclude:
+    - vendor/**/*
+    - bin/*
+    - tmp/*
+    - db/*
+    - db/migrate/*
+    - app/repositories/example_repository.rb
+    - Gemfile
+    - config/**/*
+    - spec/rails_helper.rb
+    - spec/spec_helper.rb
+    - node_modules/**/*
+
+Naming/AccessorMethodName:
+  Exclude:
+    - lib/**/*
+    - app/services/**/*  
+
+Rails/Date:
+  Enabled: false
+
+Rails/TimeZone:
+  Enabled: false
+
+Rails/Output:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - spec/**/*
+
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Exclude:
+    - app/helpers/active_admin/resources_helper.rb
+
+Metrics/MethodLength:
+  Max: 25
+
+Metrics/AbcSize:
+  Max: 25
+
+Metrics/BlockLength:
+  Max: 34
+  Exclude:
+    - spec/**/*
+    - config/routes.rb
+    - app/**/*.arb
+
+Metrics/LineLength:
+  Max: 150
+  Exclude:
+    - 'config/initializers/devise.rb'
+
+Metrics/ClassLength:
+  Max: 120
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Bundler/OrderedGems:
+  Enabled: false
+
+RSpec/BeforeAfterAll:
+  Exclude:
+    - 'spec/spec_helper.rb'
+    - 'spec/rails_helper.rb'
+    - 'spec/support/**/*.rb'
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/ExpectChange:
+  EnforcedStyle: block
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+
+RSpec/ExampleLength:
+  Max: 150
+
+RSpec/ExpectInHook:
+  Enabled: false

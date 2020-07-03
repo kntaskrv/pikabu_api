@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_02_104708) do
+ActiveRecord::Schema.define(version: 2020_07_03_061152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bookmarks", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "markable_type"
+    t.bigint "markable_id"
+    t.index ["markable_type", "markable_id"], name: "index_bookmarks_on_markable_type_and_markable_id"
+    t.index ["user_id", "markable_id", "markable_type"], name: "index_bookmarks_on_user_id_and_markable_id_and_markable_type", unique: true
+    t.index ["user_id"], name: "index_bookmarks_on_user_id"
+  end
 
   create_table "comments", force: :cascade do |t|
     t.integer "user_id", null: false

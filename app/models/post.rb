@@ -7,6 +7,7 @@ class Post < ApplicationRecord
   has_many :comments
   has_many :images, as: :imageable
   has_many :rates, as: :rateable
+  has_many :bookmarks, as: :markable
 
   scope :fresh, -> { where('posts.created_at >= ?', now - 1.day) }
   scope :hot, -> { left_joins(:comments).where('comments.created_at >= ?', now - 1.day).group(:id) }

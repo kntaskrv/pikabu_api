@@ -4,4 +4,5 @@ Rails.application.routes.draw do
     resources :comments, only: %i[index create destroy]
   end
   resources :rates, only: %i[create]
+  resources :bookmarks, only: %i[create index]
 end

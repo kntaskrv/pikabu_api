@@ -12,6 +12,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'bullet'
   gem 'pry-rails'
+  gem 'paranoia'
 end
 
 group :development do
@@ -24,3 +25,4 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'carrierwave'
 gem 'pagy'
+gem 'pundit'

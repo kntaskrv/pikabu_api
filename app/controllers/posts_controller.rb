@@ -1,7 +1,12 @@
 class PostsController < ApplicationController
   attr_reader :post
 
-  def index; end
+  def index
+    @pagy, @posts = pagy(Post.all)
+    @posts = @posts.send(params[:filter]) if params[:filter]
+    @posts = @posts.send(params[:order]) if params[:order]
+    render json: { data: @posts }
+  end
 
   def create
     @post = Post.create!(user: user, title: params[:title], description: params[:description])

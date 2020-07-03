@@ -104,6 +104,7 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
+    pagy (3.8.2)
     pg (1.2.3)
     pry (0.13.1)
       coderay (~> 1.1)
@@ -178,6 +179,7 @@ DEPENDENCIES
   byebug
   carrierwave
   listen (~> 3.2)
+  pagy
   pg (>= 0.18, < 2.0)
   pry-rails
   puma (~> 4.1)

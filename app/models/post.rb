@@ -1,13 +1,15 @@
 class Post < ApplicationRecord
+  acts_as_paranoid
+
   validates :title, presence: true
 
   belongs_to :user
 
-  has_many :tags
-  has_many :comments
-  has_many :images, as: :imageable
-  has_many :rates, as: :rateable
-  has_many :bookmarks, as: :markable
+  has_many :tags, dependent: :destroy
+  has_many :comments, dependent: :destroy
+  has_many :images, as: :imageable, dependent: :destroy
+  has_many :rates, as: :rateable, dependent: :destroy
+  has_many :bookmarks, as: :markable, dependent: :destroy
 
   scope :fresh, -> { where('posts.created_at >= ?', now - 1.day) }
   scope :hot, -> { left_joins(:comments).where('comments.created_at >= ?', now - 1.day).group(:id) }

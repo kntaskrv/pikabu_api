@@ -4,22 +4,45 @@ module Api
       attr_reader :comment
 
       def index
-        @pagy, @comments = pagy(Comment.all)
+        return render json: { error: 'Post not found' } unless post
+
+        @pagy, @comments = pagy(post.comments)
         @comments = @comments.send(params[:order]) if params[:order]
-        render json: { data: @comments }
+        render json: {
+          posts: ActiveModel::Serializer::CollectionSerializer.new(
+            @comments,
+            serializer: CommentSerializer
+          ),
+          pagy: pagy_metadata(@pagy)
+        }
       end
 
       def create
-        @comment = post.comments.create!(user: user, text: params[:text])
+        @comment = post.comments.new(user: user, text: params[:text])
         add_images if files
+        if @comment.save
+          render json: @comment, status: :ok
+        else
+          render json: { errors: @comment.errors.full_messages }
+        end
       end
 
       private
 
+      def post
+        @post || Post.find_by(id: params[:post_id])
+      end
+
+      def files
+        @files || params[:files]
+      end
+
       def add_images
+        result = { errors: [] }
         files.each do |file|
-          comment.images.create!(image: file)
+          comment.images.new(image: file)
         end
+        result
       end
     end
   end

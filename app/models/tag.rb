@@ -1,5 +1,6 @@
 class Tag < ApplicationRecord
   validates :tag, presence: true
 
-  belongs_to :post
+  has_many :tagging
+  has_many :posts, through: :tagging
 end

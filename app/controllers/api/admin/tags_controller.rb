@@ -7,7 +7,7 @@ module Api
         if tag.save
           render json: { tag: tag }, status: :ok
         else
-          render json: { errors: tag.errors.full_messages }
+          render json: { errors: tag.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
@@ -20,18 +20,21 @@ module Api
         if tag.update(tag_params)
           render json: { tag: tag }, status: :ok
         else
-          render json: { errors: tag.errors.full_messages }
+          render json: { errors: tag.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
       def destroy
         tag = load_tag
-        return render json: { message: 'Tag already deleted' } unless tag
+        return render json: { message: 'Tag already deleted' }, status: :ok unless tag
 
         authorize tag
 
-        tag.destroy
-        render json: { message: 'Tag deleted' }
+        if tag.destroy
+          render json: { message: 'Tag deleted' }, status: :ok
+        else
+          render json: { errors: tag.errors.full_messages }, status: :unprocessable_entity
+        end
       end
 
       private
@@ -41,7 +44,7 @@ module Api
       end
 
       def load_tag
-        Tag.find_by(id: params[:id])
+        Tag.find(params[:id])
       end
     end
   end

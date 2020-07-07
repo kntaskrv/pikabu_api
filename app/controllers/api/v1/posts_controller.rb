@@ -17,20 +17,20 @@ module Api
       end
 
       def create
-        @post = Post.new(post_params)
+        @post = user.posts.new(post_params)
         add_images if files
         add_tags if tags
         if @post.save
           render json: @post, status: :ok
         else
-          render json: { error: @post.errors.full_messages }
+          render json: { error: @post.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
       private
 
       def post_params
-        params.permit(:title, :description, :user_id)
+        params.permit(:title, :description)
       end
 
       def add_images
@@ -41,7 +41,7 @@ module Api
 
       def add_tags
         tags.each do |tag_id|
-          tag = Tag.find_by(id: tag_id)
+          tag = Tag.find(tag_id)
           post.tags << tag if tag
         end
       end

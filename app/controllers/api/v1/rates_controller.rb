@@ -2,19 +2,23 @@ module Api
   module V1
     class RatesController < ApplicationController
       def create
-        return render json: { error: "#{params[:type]} not found" } unless rateable
+        return render json: { error: "#{params[:type]} not found" }, status: :not_found unless rateable
+
+        return render json: { error: 'Wrong type' }, status: :bad_request unless type_valid?
 
         rate = rateable.rates.new(rate_params)
         if rate.save
           render json: { message: 'Rate created' }, status: :ok
         else
-          render json: { error: rate.errors.full_messages }
+          render json: { error: rate.errors.full_messages }, status: :unprocessable_entity
         end
-      rescue NameError
-        render json: { error: 'Wrong type' }
       end
 
       private
+
+      def type_valid?
+        %w[post comment].include?(params[:type].downcase)
+      end
 
       def rate_params
         {
@@ -24,7 +28,7 @@ module Api
       end
 
       def rateable
-        @markable || params[:type].constantize.find_by(id: params[:id])
+        @rateable || params[:type].capitalize.constantize.find_by(id: params[:id])
       end
     end
   end

@@ -2,9 +2,9 @@ module Api
   module V1
     class BookmarksController < ApplicationController
       def index
-        return render json: { error: "Type can't be blank" } if params[:type].blank?
+        return render json: { error: "Type can't be blank" }, status: :bad_request if params[:type].blank?
 
-        return render json: { error: 'Wrong type' } unless type_valid?
+        return render json: { error: 'Wrong type' }, status: :bad_request unless type_valid?
 
         @pagy, @bookmarks = pagy(user.bookmarks)
         @bookmarks = @bookmarks.where(markable_type: params[:type]) if params[:type]
@@ -12,30 +12,26 @@ module Api
       end
 
       def create
-        return render json: { error: "#{params[:type]} not found" } unless markable
+        return render json: { error: "#{params[:type]} not found" }, status: :not_found unless markable
 
-        mark = markable.bookmarks.new(mark_params)
+        return render json: { error: 'Wrong type' }, status: :bad_request unless type_valid?
+
+        mark = markable.bookmarks.new(user: user)
         if mark.save
           render json: { message: 'Bookmark added' }, status: :ok
         else
-          render json: { errors: mark.errors.full_messages }
+          render json: { errors: mark.errors.full_messages }, status: :unprocessable_entity
         end
-      rescue NameError
-        render json: { error: 'Wrong type' }
       end
 
       private
 
       def type_valid?
-        params[:type] == ('Post' || 'Comment')
-      end
-
-      def mark_params
-        params.permit(:user_id)
+        %w[post comment].include?(params[:type].downcase)
       end
 
       def markable
-        @markable || params[:type].constantize.find_by(id: params[:id])
+        @markable || params[:type].capitalize.constantize.find(id: params[:id])
       end
     end
   end

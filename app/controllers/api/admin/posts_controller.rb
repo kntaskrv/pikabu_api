@@ -4,7 +4,11 @@ module Api
       def destroy
         post = Post.find(params[:id])
         authorize post
-        post.destroy
+        if post.destroy
+          render json: { message: 'Post deleted' }, status: :ok
+        else
+          render json: { errors: post.errors.full_messages }, status: :unprocessable_entity
+        end
       end
     end
   end

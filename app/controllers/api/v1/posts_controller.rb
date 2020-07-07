@@ -51,9 +51,8 @@ module Api
       end
 
       def add_tags
-        tags.each do |tag_id|
-          tag = Tag.find(tag_id)
-          post.tags << tag if tag
+        Tag.where(id: tags).each do |tag|
+          post.tags << tag
         end
       end
 
@@ -62,7 +61,7 @@ module Api
       end
 
       def tags
-        @tags || params[:tags].split(',')
+        @tags || params[:tags]
       end
     end
   end

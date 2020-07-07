@@ -16,6 +16,11 @@ module Api
         }
       end
 
+      def find_by_title
+        @post = Post.find_by!(title: params[:title])
+        render json: @post, status: :ok
+      end
+
       def create
         @post = user.posts.new(post_params)
         add_images if files

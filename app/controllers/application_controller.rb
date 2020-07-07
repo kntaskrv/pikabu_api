@@ -4,18 +4,18 @@ class ApplicationController < ActionController::API
 
   before_action :authenticate_user
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-  rescue_from ActiveRecord::RecordNotFound, with: :user_not_found
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   attr_reader :current_user
 
   protected
 
   def user_not_authorized
-    render json: { error: 'You are not authorized to perform this action' }
+    render json: { error: 'You are not authorized to perform this action' }, status: :unauthorized
   end
 
-  def user_not_found
-    render json: { error: 'User not found' }
+  def record_not_found(exception)
+    render json: { error: exception.message }, status: :not_found
   end
 
   def authenticate_user
@@ -23,6 +23,6 @@ class ApplicationController < ActionController::API
   end
 
   def user
-    @user || User.find_by(id: params[:user_id]) || User.find_by!(name: params[:username])
+    @user || User.find(id: params[:user_id]) || User.find_by!(name: params[:username])
   end
 end

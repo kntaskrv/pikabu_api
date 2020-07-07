@@ -8,7 +8,10 @@ module Api
 
         @pagy, @bookmarks = pagy(user.bookmarks)
         @bookmarks = @bookmarks.where(markable_type: params[:type]) if params[:type]
-        render json: { data: @bookmarks, pagy: pagy_metadata(@pagy) }
+        render json: {
+          data: @bookmarks,
+          pagy: pagy_metadata(@pagy).slice(:page, :next, :last)
+        }, status: :ok
       end
 
       def create

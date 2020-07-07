@@ -31,7 +31,7 @@ module Api
       end
 
       def markable
-        @markable || params[:type].capitalize.constantize.find(id: params[:id])
+        @markable || params[:type].capitalize.constantize.find(params[:id])
       end
     end
   end

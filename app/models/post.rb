@@ -18,4 +18,6 @@ class Post < ApplicationRecord
   scope :order_by_likes, -> { left_joins(:rates).where(rates: { status: 'like' }).group(:id).order('count(rates.id) desc') }
   scope :order_by_created, -> { order(created_at: :desc) }
   scope :order_by_comments, -> { left_joins(:comments).group(:id).order('count(comments.id) desc') }
+
+  pg_search_scope :search_by_title, against: :title
 end

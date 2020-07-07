@@ -13,7 +13,7 @@ module Api
             @comments,
             serializer: CommentSerializer
           ),
-          pagy: pagy_metadata(@pagy)
+          pagy: pagy_metadata(@pagy).slice(:page, :next, :last)
         }
       end
 

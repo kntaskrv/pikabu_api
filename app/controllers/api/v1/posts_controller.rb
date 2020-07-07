@@ -12,13 +12,19 @@ module Api
             @posts,
             serializer: PostSerializer
           ),
-          pagy: pagy_metadata(@pagy)
-        }
+          pagy: pagy_metadata(@pagy).slice(:page, :next, :last)
+        }, status: :ok
       end
 
       def find_by_title
-        @post = Post.find_by!(title: params[:title])
-        render json: @post, status: :ok
+        @pagy, @posts = pagy(Post.search_by_title(params[:title]))
+        render json: {
+          posts: ActiveModel::Serializer::CollectionSerializer.new(
+            @posts,
+            serializer: PostSerializer
+          ),
+          pagy: pagy_metadata(@pagy).slice(:page, :next, :last)
+        }, status: :ok
       end
 
       def create

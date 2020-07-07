@@ -4,8 +4,6 @@ module Api
       attr_reader :comment
 
       def index
-        return render json: { error: 'Post not found' }, status: :not_found unless post
-
         @pagy, @comments = pagy(post.comments)
         @comments = @comments.send(params[:order]) if params[:order]
         render json: {

@@ -15,8 +15,6 @@ module Api
       end
 
       def create
-        return render json: { error: "#{params[:type]} not found" }, status: :not_found unless markable
-
         return render json: { error: 'Wrong type' }, status: :bad_request unless type_valid?
 
         mark = markable.bookmarks.new(user: user)
@@ -30,11 +28,11 @@ module Api
       private
 
       def type_valid?
-        %w[post comment].include?(params[:type].downcase)
+        %w[post comment].include?(params[:type]&.downcase)
       end
 
       def markable
-        @markable || params[:type].capitalize.constantize.find(params[:id])
+        @markable || params[:type]&.capitalize&.constantize&.find(params[:id])
       end
     end
   end

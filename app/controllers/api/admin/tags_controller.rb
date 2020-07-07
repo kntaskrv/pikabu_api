@@ -12,11 +12,7 @@ module Api
       end
 
       def update
-        tag = load_tag
-        return render json: { error: 'Tag not found' } unless tag
-
         authorize tag
-
         if tag.update(tag_params)
           render json: { tag: tag }, status: :ok
         else
@@ -25,11 +21,7 @@ module Api
       end
 
       def destroy
-        tag = load_tag
-        return render json: { message: 'Tag already deleted' }, status: :ok unless tag
-
         authorize tag
-
         if tag.destroy
           render json: { message: 'Tag deleted' }, status: :ok
         else
@@ -43,8 +35,8 @@ module Api
         params.permit(:tag)
       end
 
-      def load_tag
-        Tag.find(params[:id])
+      def tag
+        @tag || Tag.find(params[:id])
       end
     end
   end

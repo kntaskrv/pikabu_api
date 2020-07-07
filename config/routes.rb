@@ -1,11 +1,9 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-
-
-
   namespace :api do
     namespace :v1 do
       resources :posts do
+        get 'find_by_title', on: :collection, to: 'posts#find_by_title'
         resources :comments, only: %i[index create destroy]
       end
       resources :rates, only: %i[create]

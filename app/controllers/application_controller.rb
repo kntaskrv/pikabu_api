@@ -23,6 +23,6 @@ class ApplicationController < ActionController::API
   end
 
   def user
-    @user || User.find(id: params[:user_id]) || User.find_by!(name: params[:username])
+    @user || User.find(params[:user_id]) || User.find_by!(name: params[:username])
   end
 end

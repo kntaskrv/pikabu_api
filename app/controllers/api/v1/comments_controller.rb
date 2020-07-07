@@ -4,7 +4,7 @@ module Api
       attr_reader :comment
 
       def index
-        return render json: { error: 'Post not found' } unless post
+        return render json: { error: 'Post not found' }, status: :not_found unless post
 
         @pagy, @comments = pagy(post.comments)
         @comments = @comments.send(params[:order]) if params[:order]
@@ -23,14 +23,14 @@ module Api
         if @comment.save
           render json: @comment, status: :ok
         else
-          render json: { errors: @comment.errors.full_messages }
+          render json: { errors: @comment.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
       private
 
       def post
-        @post || Post.find_by(id: params[:post_id])
+        @post || Post.find(params[:post_id])
       end
 
       def files
@@ -38,11 +38,9 @@ module Api
       end
 
       def add_images
-        result = { errors: [] }
         files.each do |file|
           comment.images.new(image: file)
         end
-        result
       end
     end
   end

@@ -4,12 +4,10 @@ module Api
       def create
         return render json: { error: 'Wrong type' }, status: :bad_request unless type_valid?
 
-        rate = rateable.rates.new(rate_params)
-        if rate.save
-          render json: { message: 'Rate created' }, status: :ok
-        else
-          render json: { error: rate.errors.full_messages }, status: :unprocessable_entity
-        end
+        return render json: { error: 'Wrong status' }, status: :bad_request unless status_valid?
+
+        result = Rates::Create.call(user, rateable, status: params[:status])
+        render json: { message: result[:message] }, status: result[:status]
       end
 
       private
@@ -18,11 +16,8 @@ module Api
         %w[post comment].include?(params[:type]&.downcase)
       end
 
-      def rate_params
-        {
-          user: user,
-          status: params[:status] || 'like'
-        }
+      def status_valid?
+        %w[like dislike].include?(params[:status]&.downcase)
       end
 
       def rateable

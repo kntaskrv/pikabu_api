@@ -7,7 +7,7 @@ class Post < ApplicationRecord
 
   has_many :tagging, dependent: :destroy
   has_many :tags, through: :tagging
-  has_many :comments, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
   has_many :images, as: :imageable, dependent: :destroy
   has_many :rates, as: :rateable, dependent: :destroy
   has_many :bookmarks, as: :markable, dependent: :destroy

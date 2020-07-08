@@ -20,4 +20,8 @@ class Post < ApplicationRecord
   scope :order_by_comments, -> { left_joins(:comments).group(:id).order('count(comments.id) desc') }
 
   pg_search_scope :search_by_title, against: :title
+
+  def rating
+    rates.where(status: 'like').count - rates.where(status: 'dislike').count
+  end
 end

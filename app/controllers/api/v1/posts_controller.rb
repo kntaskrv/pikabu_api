@@ -28,6 +28,8 @@ module Api
       end
 
       def create
+        return render json: { message: 'Your rating too low for creating posts' }, status: :ok if user.bad_rating?
+
         @post = user.posts.new(post_params)
         add_images if files
         add_tags if tags

@@ -15,13 +15,14 @@ module Rates
       when 'diff exist'
         @result = Rates::Delete.call(rateable.user, rate)
       end
-      @result
+      result
     end
 
     private
 
     def check_rate
       return 'not exist' unless rate
+
       return 'same exist' if rate.status == status
 
       'diff exist'

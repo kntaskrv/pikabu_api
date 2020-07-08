@@ -4,10 +4,6 @@ module Api
       attr_reader :comment
 
       def index
-        # return render json: { error: "Type can't be blank" }, status: :bad_request if params[:type].blank?
-
-        # return render json: { error: 'Wrong type' }, status: :bad_request unless type_valid?
-
         comments = Comments::Load.call(find_params)
         @pagy, @comments = pagy(comments)
         @comments = @comments.send(params[:order]) if params[:order]

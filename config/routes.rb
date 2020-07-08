@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       resources :comments, only: %i[index create destroy]
       resources :rates, only: %i[create]
       resources :bookmarks, only: %i[create index]
+      resources :users, only: %i[index]
     end
 
     namespace :admin do

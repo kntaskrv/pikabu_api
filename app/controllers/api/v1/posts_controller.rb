@@ -4,7 +4,8 @@ module Api
       attr_reader :post
 
       def index
-        @pagy, @posts = pagy(Post.all)
+        posts = Posts::Load.call(find_params)
+        @pagy, @posts = pagy(posts)
         @posts = @posts.send(params[:filter]) if params[:filter]
         @posts = @posts.send(params[:order]) if params[:order]
         render json: {
@@ -44,6 +45,10 @@ module Api
 
       def post_params
         params.permit(:title, :description)
+      end
+
+      def find_params
+        params.permit({ tags: [] }, :date_start, :date_end, :rating)
       end
 
       def add_images

@@ -4,10 +4,15 @@ module Api
       attr_reader :comment
 
       def index
-        @pagy, @comments = pagy(post.comments)
+        # return render json: { error: "Type can't be blank" }, status: :bad_request if params[:type].blank?
+
+        # return render json: { error: 'Wrong type' }, status: :bad_request unless type_valid?
+
+        comments = Comments::Load.call(find_params)
+        @pagy, @comments = pagy(comments)
         @comments = @comments.send(params[:order]) if params[:order]
         render json: {
-          posts: ActiveModel::Serializer::CollectionSerializer.new(
+          comments: ActiveModel::Serializer::CollectionSerializer.new(
             @comments,
             serializer: CommentSerializer
           ),
@@ -16,7 +21,9 @@ module Api
       end
 
       def create
-        @comment = post.comments.new(user: user, text: params[:text])
+        return render json: { error: 'Wrong type' }, status: :bad_request unless type_valid?
+
+        @comment = commentable.comments.new(comment_param.merge(user: user))
         add_images if files
         if @comment.save
           render json: @comment, status: :ok
@@ -27,8 +34,20 @@ module Api
 
       private
 
-      def post
-        @post || Post.find(params[:post_id])
+      def type_valid?
+        %w[post comment].include?(params[:type]&.downcase)
+      end
+
+      def find_params
+        params.permit(:find_user_id, :post_id, :date_start, :date_end, :rating)
+      end
+
+      def comment_param
+        params.permit(:text)
+      end
+
+      def commentable
+        @commentable || params[:type]&.capitalize&.constantize&.find(params[:id])
       end
 
       def files

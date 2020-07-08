@@ -4,8 +4,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :posts do
         get 'find_by_title', on: :collection, to: 'posts#find_by_title'
-        resources :comments, only: %i[index create destroy]
       end
+      resources :comments, only: %i[index create destroy]
       resources :rates, only: %i[create]
       resources :bookmarks, only: %i[create index]
     end

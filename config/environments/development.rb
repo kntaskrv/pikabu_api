@@ -57,4 +57,5 @@ Rails.application.configure do
     Bullet.skip_html_injection = false
   end
 
+  config.logger = Logger.new(STDOUT)
 end

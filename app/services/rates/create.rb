@@ -13,7 +13,7 @@ module Rates
         @result[:message] = 'The same rate already exist'
         @result[:status] = :ok
       when 'diff exist'
-        @result = Rates::Delete.call(rateable.user, rate)
+        @result = Rates::Delete.call(rateable.user, rate, status)
       end
       result
     end
@@ -33,7 +33,7 @@ module Rates
       if rating.save
         @result[:message] = 'Rate created'
         @result[:status] = :ok
-        UserChangeRateJob.set(wait: 5.minutes).perform_later(rateable.user, rating)
+        UserChangeRateJob.set(wait: 5.seconds).perform_later(rateable.user, rating.status)
       else
         @result[:errors] = rating.errors.full_messages
         @result[:status] = :unprocessable_entity

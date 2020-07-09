@@ -5,15 +5,14 @@ module Api
 
       def index
         comments = Comments::Load.call(find_params)
-        @pagy, @comments = pagy(comments)
-        @comments = @comments.send(params[:order]) if params[:order]
+        @pagy, @comments = pagy_array(comments)
         render json: {
           comments: ActiveModel::Serializer::CollectionSerializer.new(
             @comments,
             serializer: CommentSerializer
           ),
           pagy: pagy_metadata(@pagy).slice(:page, :next, :last)
-        }
+        }, status: :ok
       end
 
       def create
@@ -35,7 +34,7 @@ module Api
       end
 
       def find_params
-        params.permit(:find_user_id, :post_id, :date_start, :date_end, :rating)
+        params.permit(:find_user_id, :post_id, :date_start, :date_end, :rating, :order)
       end
 
       def comment_param

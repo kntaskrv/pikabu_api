@@ -5,15 +5,20 @@ module Comments
     attr_reader :comments
 
     def call
-      @comments = Comment.all
+      @comments = Comment.includes(:rates, :images, :comments).all
       search_by_user
       search_by_post
       seacrh_by_date
+      order
       search_by_rating
       comments
     end
 
     private
+
+    def order
+      @comments = comments.send(params[:order]) if options[:order]
+    end
 
     def search_by_user
       @comments = comments.where(user_id: options[:find_user_id]) if options[:find_user_id]
@@ -29,8 +34,7 @@ module Comments
     end
 
     def search_by_rating
-      @comments = comments.map { |comment| comment if comment.rating >= options[:rating].to_i }.compact if options[:rating]
-      @comments = Comment.where(id: comments.map(&:id)) if options[:rating]
+      @comments = comments.select { |comment| comment if comment.rating >= options[:rating].to_i } if options[:rating]
     end
   end
 end

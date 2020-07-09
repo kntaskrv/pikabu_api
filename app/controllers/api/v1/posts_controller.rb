@@ -5,9 +5,7 @@ module Api
 
       def index
         posts = Posts::Load.call(find_params)
-        @pagy, @posts = pagy(posts)
-        @posts = @posts.send(params[:filter]) if params[:filter]
-        @posts = @posts.send(params[:order]) if params[:order]
+        @pagy, @posts = pagy_array(posts)
         render json: {
           posts: ActiveModel::Serializer::CollectionSerializer.new(
             @posts,
@@ -48,7 +46,7 @@ module Api
       end
 
       def find_params
-        params.permit({ tags: [] }, :date_start, :date_end, :rating)
+        params.permit({ tags: [] }, :date_start, :date_end, :rating, :filter, :order)
       end
 
       def add_images

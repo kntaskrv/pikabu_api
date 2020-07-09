@@ -22,6 +22,6 @@ class Post < ApplicationRecord
   pg_search_scope :search_by_title, against: :title
 
   def rating
-    rates.where(status: 'like').count - rates.where(status: 'dislike').count
+    rates.count(&:like?) - rates.count(&:dislike?)
   end
 end

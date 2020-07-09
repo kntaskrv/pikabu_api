@@ -15,6 +15,6 @@ class Comment < ApplicationRecord
   scope :order_by_created, -> { order(created_at: :desc) }
 
   def rating
-    rates.where(status: 'like').count - rates.where(status: 'dislike').count
+    rates.count(&:like?) - rates.count(&:dislike?)
   end
 end

@@ -3,6 +3,7 @@ module Api
     class UsersController < ApplicationController
       def index
         @pagy, @users = pagy(User.order(rate: :desc))
+
         render json: {
           users: ActiveModel::Serializer::CollectionSerializer.new(
             @users,

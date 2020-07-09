@@ -6,6 +6,7 @@ module Api
       def index
         comments = Comments::Load.call(find_params)
         @pagy, @comments = pagy_array(comments)
+
         render json: {
           comments: ActiveModel::Serializer::CollectionSerializer.new(
             @comments,
@@ -18,8 +19,9 @@ module Api
       def create
         return render json: { error: 'Wrong type' }, status: :bad_request unless type_valid?
 
-        @comment = commentable.comments.new(comment_param.merge(user: user))
+        @comment = commentable.comments.new(comment_params.merge(user: user))
         add_images if files
+
         if @comment.save
           render json: @comment, status: :ok
         else
@@ -37,7 +39,7 @@ module Api
         params.permit(:find_user_id, :post_id, :date_start, :date_end, :rating, :order)
       end
 
-      def comment_param
+      def comment_params
         params.permit(:text)
       end
 

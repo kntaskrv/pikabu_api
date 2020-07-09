@@ -4,7 +4,12 @@ module Posts
 
     attr_reader :posts
 
+    POSIBLE_ORDERS = %w[order_by_likes order_by_created].freeze
+    POSIBLE_FILTERS = %w[hot best fresh].freeze
+
     def call
+      normalize_options
+
       @posts = Post.includes(:rates, :images, :tags, :comments).all
       search_by_tags
       search_by_date
@@ -15,6 +20,24 @@ module Posts
     end
 
     private
+
+    def normalize_options
+      options[:order] = POSIBLE_ORDERS.include?(options[:order]) ? options[:order] : nil
+      options[:filter] = POSIBLE_FILTERS.includes?(options[:filter]) ? options[:filter] : nil
+      options[:rating] = options[:rating].to_i
+      normalize_date
+    end
+
+    def normalize_date
+      options[:date_start] = validate_date(options[:date_start]) if options[:date_start]
+      options[:date_start] = validate_date(options[:date_end]) if options[:date_end]
+    end
+
+    def validate_date(date)
+      Date.parse(date)
+    rescue ArgumentError
+      nil
+    end
 
     def filter
       @posts = posts.send(params[:filter]) if options[:filter]

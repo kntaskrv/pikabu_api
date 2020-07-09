@@ -3,6 +3,7 @@ module Api
     class PostsController < ApplicationController
       def destroy
         authorize post
+
         if post.destroy
           render json: { message: 'Post deleted' }, status: :ok
         else

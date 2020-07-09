@@ -4,17 +4,32 @@ module Comments
 
     attr_reader :comments
 
+    POSIBLE_ORDERS = %w[order_by_likes order_by_created].freeze
+
     def call
+      normalize_options
+
       @comments = Comment.includes(:rates, :images, :comments).all
       search_by_user
       search_by_post
-      seacrh_by_date
+      search_by_date
       order
       search_by_rating
       comments
     end
 
     private
+
+    def normalize_options
+      options[:order] = POSIBLE_ORDERS.include?(options[:order]) ? options[:order] : nil
+      options[:rating] = options[:rating].to_i
+      normalize_date
+    end
+
+    def normalize_date
+      options[:date_start] = validate_date(options[:date_start]) if options[:date_start]
+      options[:date_end] = validate_date(options[:date_end]) if options[:date_end]
+    end
 
     def order
       @comments = comments.send(params[:order]) if options[:order]
@@ -28,13 +43,19 @@ module Comments
       @comments = comments.where(commentable_id: options[:post_id], commentable_type: 'Post') if options[:post_id]
     end
 
-    def seacrh_by_date
+    def search_by_date
       @comments = comments.where('comments.created_at >= ?', options[:date_start]) if options[:date_start]
       @comments = comments.where('comments.created_at <= ?', options[:date_end]) if options[:date_end]
     end
 
     def search_by_rating
-      @comments = comments.select { |comment| comment if comment.rating >= options[:rating].to_i } if options[:rating]
+      @comments = comments.select { |comment| comment if comment.rating >= options[:rating] } if options[:rating]
+    end
+
+    def validate_date(date)
+      Date.parse(date)
+    rescue ArgumentError
+      nil
     end
   end
 end

@@ -1,15 +1,13 @@
 class CommentSerializer < ActiveModel::Serializer
-  attributes :id, :commentable_id, :user_id,
-             :text, :like_count, :dislike_count,
-             :comments
+  attributes :id,
+             :commentable_id,
+             :user_id,
+             :text,
+             :like_count,
+             :dislike_count
 
+  has_many :comments
   has_many :images
-
-  def comments
-    object.comments.map do |comment|
-      CommentSerializer.new(comment).attributes
-    end
-  end
 
   def like_count
     object.rates.count(&:like?)

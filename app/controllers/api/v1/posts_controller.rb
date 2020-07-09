@@ -6,6 +6,7 @@ module Api
       def index
         posts = Posts::Load.call(find_params)
         @pagy, @posts = pagy_array(posts)
+
         render json: {
           posts: ActiveModel::Serializer::CollectionSerializer.new(
             @posts,
@@ -17,6 +18,7 @@ module Api
 
       def find_by_title
         @pagy, @posts = pagy(Post.search_by_title(params[:title]))
+
         render json: {
           posts: ActiveModel::Serializer::CollectionSerializer.new(
             @posts,
@@ -32,6 +34,7 @@ module Api
         @post = user.posts.new(post_params)
         add_images if files
         add_tags if tags
+
         if @post.save
           render json: @post, status: :ok
         else
@@ -56,9 +59,7 @@ module Api
       end
 
       def add_tags
-        Tag.where(id: tags).each do |tag|
-          post.tags << tag
-        end
+        post.tags = Tag.where(id: tags)
       end
 
       def files

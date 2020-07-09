@@ -8,6 +8,7 @@ module Api
 
         @pagy, @bookmarks = pagy(user.bookmarks)
         @bookmarks = @bookmarks.where(markable_type: params[:type]) if params[:type]
+
         render json: {
           data: @bookmarks,
           pagy: pagy_metadata(@pagy).slice(:page, :next, :last)
@@ -17,7 +18,8 @@ module Api
       def create
         return render json: { error: 'Wrong type' }, status: :bad_request unless type_valid?
 
-        mark = markable.bookmarks.new(user: user)
+        mark = user.bookmarks.new(markable: markable)
+
         if mark.save
           render json: { message: 'Bookmark added' }, status: :ok
         else

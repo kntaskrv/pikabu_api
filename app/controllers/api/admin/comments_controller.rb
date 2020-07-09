@@ -3,6 +3,7 @@ module Api
     class CommentsController < ApplicationController
       def destroy
         authorize comment
+
         if comment.destroy
           render json: { message: 'Comment deleted' }, status: :ok
         else

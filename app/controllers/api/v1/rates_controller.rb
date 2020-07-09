@@ -7,6 +7,7 @@ module Api
         return render json: { error: 'Wrong status' }, status: :bad_request unless status_valid?
 
         result = Rates::Create.call(user, rateable, status: params[:status])
+
         render json: { message: result[:message] }, status: result[:status]
       end
 

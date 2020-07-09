@@ -4,6 +4,7 @@ module Api
       def create
         tag = Tag.new(tag_params)
         authorize tag
+
         if tag.save
           render json: { tag: tag }, status: :ok
         else
@@ -13,6 +14,7 @@ module Api
 
       def update
         authorize tag
+
         if tag.update(tag_params)
           render json: { tag: tag }, status: :ok
         else
@@ -22,6 +24,7 @@ module Api
 
       def destroy
         authorize tag
+
         if tag.destroy
           render json: { message: 'Tag deleted' }, status: :ok
         else

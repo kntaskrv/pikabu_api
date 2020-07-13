@@ -32,7 +32,7 @@ module Comments
     end
 
     def order
-      @comments = comments.send(params[:order]) if options[:order]
+      @comments = comments.send(options[:order]) if options[:order]
     end
 
     def search_by_user
@@ -50,6 +50,7 @@ module Comments
 
     def search_by_rating
       @comments = comments.select { |comment| comment if comment.rating >= options[:rating] } if options[:rating]
+      @comments = Comment.where(id: comments.map(&:id))
     end
 
     def validate_date(date)

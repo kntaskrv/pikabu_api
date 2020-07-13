@@ -13,6 +13,7 @@ group :development, :test do
   gem 'bullet'
   gem 'pry-rails'
   gem 'paranoia'
+  gem 'graphiql-rails'
 end
 
 group :development do
@@ -30,3 +31,5 @@ gem 'active_model_serializers'
 gem 'pg_search'
 gem 'rack-attack'
 gem 'dry-initializer-rails'
+gem 'graphql'
+gem 'search_object_graphql'

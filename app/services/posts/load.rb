@@ -23,7 +23,7 @@ module Posts
 
     def normalize_options
       options[:order] = POSIBLE_ORDERS.include?(options[:order]) ? options[:order] : nil
-      options[:filter] = POSIBLE_FILTERS.includes?(options[:filter]) ? options[:filter] : nil
+      options[:filter] = POSIBLE_FILTERS.include?(options[:filter]) ? options[:filter] : nil
       options[:rating] = options[:rating].to_i
       normalize_date
     end
@@ -40,11 +40,11 @@ module Posts
     end
 
     def filter
-      @posts = posts.send(params[:filter]) if options[:filter]
+      @posts = posts.send(options[:filter]) if options[:filter]
     end
 
     def order
-      @posts = @posts.send(params[:order]) if options[:order]
+      @posts = @posts.send(options[:order]) if options[:order]
     end
 
     def search_by_tags
@@ -58,6 +58,7 @@ module Posts
 
     def search_by_rating
       @posts = posts.select { |post| post if post.rating >= options[:rating].to_i } if options[:rating]
+      @posts = Post.where(id: posts.map(&:id))
     end
   end
 end

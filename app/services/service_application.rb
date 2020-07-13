@@ -1,7 +1,7 @@
 class ServiceApplication
   extend Dry::Initializer
 
-  option :result, default: -> { {} }
+  option :result, default: -> { { errors: {} } }
 
   attr_accessor :result
 

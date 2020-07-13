@@ -1,11 +1,12 @@
 module Rates
   class Create < ServiceApplication
     param :user
-    param :rateable
-
-    option :status, default: -> { 'like' }
+    param :params
 
     def call
+      argument_validate!
+      return result if result[:errors].present?
+
       case check_rate
       when 'not exist'
         create_rate
@@ -23,13 +24,13 @@ module Rates
     def check_rate
       return 'not exist' unless rate
 
-      return 'same exist' if rate.status == status
+      return 'same exist' if rate.status == params[:status]
 
       'diff exist'
     end
 
     def create_rate
-      rating = user.rates.new(rateable: rateable, status: status)
+      rating = user.rates.new(rateable: rateable, status: params[:status])
       if rating.save
         @result[:message] = 'Rate created'
         @result[:status] = :ok
@@ -42,6 +43,24 @@ module Rates
 
     def rate
       @rate || user.rates.find_by(rateable: rateable)
+    end
+
+    def argument_validate!
+      @result[:errors][:type] = "Wrong type" unless type_valid?
+      @result[:errors][:status] = "Wrong status" unless status_valid?
+      @result[:status] = :unprocessable_entity if result[:errors].present?
+    end
+
+    def status_valid?
+      %w[like dislike].include?(params[:status]&.downcase)
+    end
+
+    def type_valid?
+      %w[post comment].include?(params[:rateable_type]&.downcase)
+    end
+
+    def rateable
+      @rateable || params[:rateable_type].capitalize.constantize.find(params[:rateable_id])
     end
   end
 end

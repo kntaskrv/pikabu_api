@@ -4,8 +4,8 @@ module Posts
 
     attr_reader :posts
 
-    POSIBLE_ORDERS = %w[order_by_likes order_by_created].freeze
-    POSIBLE_FILTERS = %w[hot best fresh].freeze
+    POSSIBLE_ORDERS = %w[order_by_likes order_by_created].freeze
+    POSSIBLE_FILTERS = %w[hot best fresh].freeze
 
     def call
       normalize_options

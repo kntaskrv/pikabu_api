@@ -19,10 +19,6 @@ module Mutations
 
     private
 
-    def current_user
-      @current_user || context[:current_user]
-    end
-
     def argument_validate!
       raise Exceptions::ValidationError, "Wrong type" unless type_valid?
     end

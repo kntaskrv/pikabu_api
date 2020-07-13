@@ -11,8 +11,7 @@ module Mutations
     def resolve(**args)
       raise Exceptions::ValidationError, 'Your rating is too bad' if current_user.bad_rating?
 
-      post = Post.new(
-        user_id: args[:user_id],
+      post = current_user.posts.new(
         title: args[:title],
         description: args[:description]
       )

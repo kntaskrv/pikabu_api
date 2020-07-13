@@ -1,5 +1,5 @@
 class Rate < ApplicationRecord
-  validates :user_id, uniqueness: { scope: %i[rateable_id rateable_type] }
+  validates :user_id, uniqueness: { scope: %i[rateable_id rateable_type], message: 'already has this rate' }
 
   belongs_to :rateable, polymorphic: true
   belongs_to :user

@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   include Pundit
   include Pagy::Backend
 
-  before_action :authenticate_user
+  # before_action :authenticate_user
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 

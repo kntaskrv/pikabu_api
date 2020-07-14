@@ -8,7 +8,7 @@ module Mutations
       user = User.find(args[:id])
 
       policy = UserPolicy.new(current_user, user)
-      raise Exceptions::ValidationError, 'You are not authorized to perform this action' unless policy.destroy?
+      raise Exceptions::AccessDenied, 'You are not authorized to perform this action' unless policy.destroy?
 
       raise Exceptions::ValidationError, user.errors.full_messages unless user.destroy
 

@@ -4,7 +4,7 @@ module Comments
 
     attr_reader :comments
 
-    POSIBLE_ORDERS = %w[order_by_likes order_by_created].freeze
+    POSSIBLE_ORDERS = %w[order_by_likes order_by_created].freeze
 
     def call
       normalize_options
@@ -21,7 +21,7 @@ module Comments
     private
 
     def normalize_options
-      options[:order] = POSIBLE_ORDERS.include?(options[:order]) ? options[:order] : nil
+      options[:order] = POSSIBLE_ORDERS.include?(options[:order]) ? options[:order] : nil
       options[:rating] = options[:rating].to_i
       normalize_date
     end

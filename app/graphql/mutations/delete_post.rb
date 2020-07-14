@@ -8,7 +8,7 @@ module Mutations
       post = Post.find(args[:id])
 
       policy = PostPolicy.new(current_user, post)
-      raise Exceptions::ValidationError, 'You are not authorized to perform this action' unless policy.destroy?
+      raise Exceptions::AccessDenied, 'You are not authorized to perform this action' unless policy.destroy?
 
       raise Exceptions::ValidationError, post.errors.full_messages unless post.destroy
 

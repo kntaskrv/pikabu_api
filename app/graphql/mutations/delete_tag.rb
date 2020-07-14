@@ -8,7 +8,7 @@ module Mutations
       tag = Tag.find(args[:id])
 
       policy = TagPolicy.new(current_user, tag)
-      raise Exceptions::ValidationError, 'You are not authorized to perform this action' unless policy.destroy?
+      raise Exceptions::AccessDenied, 'You are not authorized to perform this action' unless policy.destroy?
 
       raise Exceptions::ValidationError, tag.errors.full_messages unless tag.destroy
 

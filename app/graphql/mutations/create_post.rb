@@ -9,7 +9,7 @@ module Mutations
     type Types::PostType
 
     def resolve(**args)
-      raise Exceptions::ValidationError, 'Your rating is too bad' if current_user.bad_rating?
+      raise Exceptions::AccessDenied, 'Your rating is too bad' if current_user.bad_rating?
 
       post = current_user.posts.new(
         title: args[:title],

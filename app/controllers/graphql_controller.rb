@@ -18,6 +18,8 @@ class GraphqlController < ApplicationController
     render json: { message: e }, status: :unprocessable_entity
   rescue ActiveRecord::RecordNotFound => e
     render json: { message: e }, status: :not_found
+  rescue Exceptions::AccessDenied => e
+    render json: { message: e }, status: :forbidden
   rescue => e
     raise e unless Rails.env.development?
 

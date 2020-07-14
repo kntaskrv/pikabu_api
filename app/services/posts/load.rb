@@ -22,8 +22,8 @@ module Posts
     private
 
     def normalize_options
-      options[:order] = POSIBLE_ORDERS.include?(options[:order]) ? options[:order] : nil
-      options[:filter] = POSIBLE_FILTERS.include?(options[:filter]) ? options[:filter] : nil
+      options[:order] = POSSIBLE_ORDERS.include?(options[:order]) ? options[:order] : nil
+      options[:filter] = POSSIBLE_FILTERS.include?(options[:filter]) ? options[:filter] : nil
       options[:rating] = options[:rating].to_i
       normalize_date
     end

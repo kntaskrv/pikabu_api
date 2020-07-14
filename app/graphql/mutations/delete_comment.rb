@@ -8,7 +8,7 @@ module Mutations
       comment = Comment.find(args[:id])
 
       policy = CommentPolicy.new(current_user, comment)
-      raise Exceptions::ValidationError, 'You are not authorized to perform this action' unless policy.destroy?
+      raise Exceptions::AccessDenied, 'You are not authorized to perform this action' unless policy.destroy?
 
       raise Exceptions::ValidationError, comment.errors.full_messages unless comment.destroy
 

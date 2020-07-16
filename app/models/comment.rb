@@ -14,6 +14,13 @@ class Comment < ApplicationRecord
   scope :order_by_likes, -> { left_joins(:rates).where(rates: { status: 'like' }).group(:id).order('count(rates.id) desc') }
   scope :order_by_created, -> { order(created_at: :desc) }
 
+  searchable do
+    integer :user_id
+    integer :commentable_id
+    time :created_at
+    integer :rating
+  end
+
   def rating
     rates.count(&:like?) - rates.count(&:dislike?)
   end

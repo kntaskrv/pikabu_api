@@ -10,11 +10,19 @@ module Comments
       normalize_options
 
       @comments = Comment.includes(:rates, :images, :comments).all
-      search_by_user
-      search_by_post
-      search_by_date
+      search = Comment.search do
+        all_of do
+          with :user_id, options[:find_user_id] if options[:find_user_id]
+          with :commentable_id, options[:commentable_id] if options[:commentable_id]
+          with(:created_at).greater_than(options[:date_start]) if options[:date_start]
+          with(:created_at).less_than(options[:date_end]) if options[:date_end]
+          with(:rating).greater_than(options[:rating]) if options[:rating]
+        end
+      end
+
+      @comments = search.results
+      @comments = Comment.where(id: comments.map(&:id))
       order
-      search_by_rating
       comments
     end
 

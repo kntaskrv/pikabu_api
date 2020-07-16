@@ -1,0 +1,76 @@
+version: '3.7'
+volumes:
+  postgres_data:
+  gems_data:
+  redis:
+  solr_data:
+
+services:
+  rails: &rails
+    build:
+      context: .
+      dockerfile: Dockerfile.rails.base
+    command: bundle exec puma -C config/puma.rb -e development
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/pikabu_api
+      - /pikabu_api/tmp
+      - gems_data:/gems
+    env_file:
+      - .env
+    links:
+      - db
+    depends_on:
+      - db
+      - redis
+      - solr
+    stdin_open: true
+    tty: true
+
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+
+  solr:
+    image: solr
+    ports:
+      - "8983:8983"
+    volumes:
+      - solr_data:/opt/solr/server/solr/mycores
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - development
+    depends_on:
+      - db
+
+  redis:
+    image: redis:4.0-alpine
+    command: redis-server
+    ports:
+      - "6379"
+    volumes:
+      - redis:/data
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile.rails.base
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    volumes:
+      - .:/pikabu_api
+      - /pikabu_api/tmp
+      - gems_data:/gems
+    env_file:
+      - .env
+    links:
+      - redis
+      - db
+      - rails
+    depends_on:
+      - rails
+      - db
+    tty: true
+    stdin_open: true

@@ -21,6 +21,17 @@ class Post < ApplicationRecord
 
   pg_search_scope :search_by_title, against: :title
 
+  searchable do
+    text :title
+    text :tags do
+      tags.map(&:tag).join(' ')
+    end
+    boolean :hot
+    boolean :best
+    time :created_at
+    integer :rating
+  end
+
   def rating
     rates.count(&:like?) - rates.count(&:dislike?)
   end

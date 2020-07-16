@@ -51,8 +51,8 @@ ActiveRecord::Schema.define(version: 2020_07_16_032349) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "deleted_at"
-    # t.boolean "hot"
-    # t.boolean "best"
+    t.boolean "hot"
+    t.boolean "best"
     t.index ["best"], name: "index_posts_on_best"
     t.index ["deleted_at"], name: "index_posts_on_deleted_at"
     t.index ["hot"], name: "index_posts_on_hot"

@@ -1,0 +1,4 @@
+say_hello:
+  cron: "10 * * * *"
+  class: "ChangePostsStatusWorker"
+  queue: default

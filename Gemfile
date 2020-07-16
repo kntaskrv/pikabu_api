@@ -14,6 +14,9 @@ group :development, :test do
   gem 'pry-rails'
   gem 'paranoia'
   gem 'graphiql-rails'
+  gem 'rubocop-rspec'
+  gem 'rubocop-performance'
+  gem 'rubocop-rails'
 end
 
 group :development do
@@ -33,3 +36,7 @@ gem 'rack-attack'
 gem 'dry-initializer-rails'
 gem 'graphql'
 gem 'search_object_graphql'
+gem 'sidekiq'
+gem 'sidekiq-cron'
+gem 'sunspot_rails'
+

@@ -7,6 +7,7 @@ module Inputs
       argument :rating, Integer, required: false
       argument :date_start, String, required: false
       argument :date_end, String, required: false
+      argument :tags, Inputs::TagInput, required: false
     end
   end
 end

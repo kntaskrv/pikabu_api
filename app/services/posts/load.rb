@@ -10,12 +10,21 @@ module Posts
     def call
       normalize_options
 
-      @posts = Post.includes(:rates, :images, :tags, :comments).all
-      search_by_tags
-      search_by_date
-      filter
+      search = Post.search do
+        fulltext options[:tags].values.join(' ') if options[:tags]
+        all_of do
+          with(:created_at).greater_than(options[:date_start]) if options[:date_start]
+          with(:created_at).less_than(options[:date_end]) if options[:date_end]
+          with(:rating).greater_than(options[:rating]) if options[:rating]
+          with :hot, true if options[:filter] == 'hot'
+          with :best, true if options[:filter] == 'best'
+          with(:created_at).greater_than(Post.now - 1.day) if options[:filter] == 'fresh'
+        end
+      end
+
+      @posts = search.results
+      @posts = Post.where(id: posts.map(&:id))
       order
-      search_by_rating
       posts
     end
 

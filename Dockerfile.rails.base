@@ -1,0 +1,20 @@
+FROM ruby:2.6.6-alpine3.12
+RUN apk upgrade
+RUN apk --no-cache --update add xz-libs build-base postgresql-dev libxslt-dev libxml2-dev gcompat libc6-compat \
+                                bash wkhtmltopdf ttf-ubuntu-font-family libcurl tzdata git less
+# build project
+ENV RAILS_ROOT /pikabu_api
+
+RUN mkdir -p $RAILS_ROOT
+WORKDIR  $RAILS_ROOT
+
+ENV GEM_HOME /gems
+ENV GEM_PATH /gems
+ENV BUNDLE_PATH /gems
+RUN gem update --system
+RUN gem install bundler
+COPY Gemfile .
+COPY Gemfile.lock .
+RUN bundle config set without "wkhtmltopdf production"
+RUN bundle install --retry=3
+COPY . .

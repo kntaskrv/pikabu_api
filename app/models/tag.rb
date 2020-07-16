@@ -3,4 +3,8 @@ class Tag < ApplicationRecord
 
   has_many :tagging
   has_many :posts, through: :tagging
+
+  searchable do
+    text :tag
+  end
 end

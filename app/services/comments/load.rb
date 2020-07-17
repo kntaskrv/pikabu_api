@@ -13,6 +13,7 @@ module Comments
       search = Comment.search do
         all_of do
           with :user_id, options[:find_user_id] if options[:find_user_id]
+          with :commentable_type, 'Post' if options[:commentable_id]
           with :commentable_id, options[:commentable_id] if options[:commentable_id]
           with(:created_at).greater_than(options[:date_start]) if options[:date_start]
           with(:created_at).less_than(options[:date_end]) if options[:date_end]
@@ -30,35 +31,17 @@ module Comments
 
     def normalize_options
       options[:order] = POSSIBLE_ORDERS.include?(options[:order]) ? options[:order] : nil
-      options[:rating] = options[:rating].to_i
-      normalize_date
+      options[:rating] = options[:rating].to_i if options[:rating]
+      normalize_dates
     end
 
-    def normalize_date
+    def normalize_dates
       options[:date_start] = validate_date(options[:date_start]) if options[:date_start]
       options[:date_end] = validate_date(options[:date_end]) if options[:date_end]
     end
 
     def order
       @comments = comments.send(options[:order]) if options[:order]
-    end
-
-    def search_by_user
-      @comments = comments.where(user_id: options[:find_user_id]) if options[:find_user_id]
-    end
-
-    def search_by_post
-      @comments = comments.where(commentable_id: options[:post_id], commentable_type: 'Post') if options[:post_id]
-    end
-
-    def search_by_date
-      @comments = comments.where('comments.created_at >= ?', options[:date_start]) if options[:date_start]
-      @comments = comments.where('comments.created_at <= ?', options[:date_end]) if options[:date_end]
-    end
-
-    def search_by_rating
-      @comments = comments.select { |comment| comment if comment.rating >= options[:rating] } if options[:rating]
-      @comments = Comment.where(id: comments.map(&:id))
     end
 
     def validate_date(date)

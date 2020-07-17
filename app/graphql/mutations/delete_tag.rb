@@ -12,6 +12,8 @@ module Mutations
 
       raise Exceptions::ValidationError, tag.errors.full_messages unless tag.destroy
 
+      Sunspot.index! tag.posts
+
       { message: 'Tag deleted' }
     end
   end

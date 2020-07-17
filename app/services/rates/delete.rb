@@ -6,6 +6,7 @@ module Rates
 
     def call
       if rate.destroy
+        Sunspot.index! rate.rateable
         @result[:message] = 'Rate deleted'
         @result[:status] = :ok
         UserChangeRateJob.set(wait: 5.seconds).perform_later(user, status)

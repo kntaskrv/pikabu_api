@@ -21,6 +21,7 @@ module Api
         mark = user.bookmarks.new(markable: markable)
 
         if mark.save
+          Sunspot.index! markable
           render json: { message: 'Bookmark added' }, status: :ok
         else
           render json: { errors: mark.errors.full_messages }, status: :unprocessable_entity

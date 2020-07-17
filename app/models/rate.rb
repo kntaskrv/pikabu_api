@@ -5,4 +5,6 @@ class Rate < ApplicationRecord
   belongs_to :user
 
   enum status: { like: 0, dislike: 1 }
+
+  scope :fresh, -> { where('rates.created_at >= ?', now - 1.day) }
 end

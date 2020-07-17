@@ -11,8 +11,12 @@ module Posts
       normalize_options
 
       search = Post.search do
-        fulltext options[:tags].values.join(' ') if options[:tags]
+        all do
+          fulltext options[:title] { fields(:title) } if options[:title]
+        end
+
         all_of do
+          with :tag_names, options[:tags] if options[:tags]
           with(:created_at).greater_than(options[:date_start]) if options[:date_start]
           with(:created_at).less_than(options[:date_end]) if options[:date_end]
           with(:rating).greater_than(options[:rating]) if options[:rating]
@@ -33,13 +37,14 @@ module Posts
     def normalize_options
       options[:order] = POSSIBLE_ORDERS.include?(options[:order]) ? options[:order] : nil
       options[:filter] = POSSIBLE_FILTERS.include?(options[:filter]) ? options[:filter] : nil
-      options[:rating] = options[:rating].to_i
-      normalize_date
+      options[:rating] = options[:rating].to_i if options[:rating]
+      options[:tags] = options[:tags].values if options[:tags] && options[:tags].is_a?(Hash)
+      normalize_dates
     end
 
-    def normalize_date
+    def normalize_dates
       options[:date_start] = validate_date(options[:date_start]) if options[:date_start]
-      options[:date_start] = validate_date(options[:date_end]) if options[:date_end]
+      options[:date_end] = validate_date(options[:date_end]) if options[:date_end]
     end
 
     def validate_date(date)
@@ -48,26 +53,8 @@ module Posts
       nil
     end
 
-    def filter
-      @posts = posts.send(options[:filter]) if options[:filter]
-    end
-
     def order
       @posts = @posts.send(options[:order]) if options[:order]
-    end
-
-    def search_by_tags
-      @posts = posts.left_joins(:tags).where(tags: { tag: options[:tags] }).distinct if options[:tags]
-    end
-
-    def search_by_date
-      @posts = posts.where('posts.created_at >= ?', options[:date_start]) if options[:date_start]
-      @posts = posts.where('posts.created_at <= ?', options[:date_end]) if options[:date_end]
-    end
-
-    def search_by_rating
-      @posts = posts.select { |post| post if post.rating >= options[:rating].to_i } if options[:rating]
-      @posts = Post.where(id: posts.map(&:id))
     end
   end
 end

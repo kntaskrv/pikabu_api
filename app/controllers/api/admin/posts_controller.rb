@@ -5,6 +5,7 @@ module Api
         authorize post
 
         if post.destroy
+          post.index
           render json: { message: 'Post deleted' }, status: :ok
         else
           render json: { errors: post.errors.full_messages }, status: :unprocessable_entity

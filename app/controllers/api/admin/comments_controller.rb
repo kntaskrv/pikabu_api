@@ -5,6 +5,7 @@ module Api
         authorize comment
 
         if comment.destroy
+          comment.index
           render json: { message: 'Comment deleted' }, status: :ok
         else
           render json: { errors: comment.errors.full_messages }, status: :unprocessable_entity

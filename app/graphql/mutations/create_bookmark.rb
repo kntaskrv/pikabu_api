@@ -14,6 +14,8 @@ module Mutations
       mark = current_user.bookmarks.new(markable: markable)
       raise Exceptions::ValidationError, mark.errors.full_messages unless mark.save
 
+      Sunspot.index! markable
+
       { message: 'Bookmark created' }
     end
 

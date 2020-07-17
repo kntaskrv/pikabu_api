@@ -23,6 +23,7 @@ module Api
         add_images if files
 
         if @comment.save
+          Sunspot.index! commentable
           render json: @comment, status: :ok
         else
           render json: { errors: @comment.errors.full_messages }, status: :unprocessable_entity

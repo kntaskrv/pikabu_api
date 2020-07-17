@@ -23,13 +23,15 @@ class Post < ApplicationRecord
 
   searchable do
     text :title
-    text :tags do
-      tags.map(&:tag).join(' ')
-    end
     boolean :hot
     boolean :best
     time :created_at
     integer :rating
+    string :tag_names, multiple: true
+  end
+
+  def tag_names
+    tags.map(&:tag)
   end
 
   def rating

@@ -21,6 +21,8 @@ module Mutations
 
       raise Exceptions::ValidationError, comment.errors.full_messages unless comment.save
 
+      Sunspot.index! commentable
+
       comment
     end
 

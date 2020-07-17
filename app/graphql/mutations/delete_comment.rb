@@ -12,6 +12,8 @@ module Mutations
 
       raise Exceptions::ValidationError, comment.errors.full_messages unless comment.destroy
 
+      Sunspot.index! comment.commentable
+
       { message: 'Comment deleted' }
     end
   end

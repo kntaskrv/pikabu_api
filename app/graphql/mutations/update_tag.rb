@@ -14,6 +14,8 @@ module Mutations
       tag.tag = args[:tag]
       raise Exceptions::ValidationError, tag.errors.full_messages unless tag.save
 
+      Sunspot.index! tag.posts
+
       tag
     end
   end

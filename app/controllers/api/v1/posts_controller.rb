@@ -49,7 +49,7 @@ module Api
       end
 
       def find_params
-        params.permit({ tags: [] }, :date_start, :date_end, :rating, :filter, :order)
+        params.permit({ tags: [] }, :title, :date_start, :date_end, :rating, :filter, :order)
       end
 
       def add_images

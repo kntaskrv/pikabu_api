@@ -16,6 +16,7 @@ module Api
         authorize tag
 
         if tag.update(tag_params)
+          tag.index
           render json: { tag: tag }, status: :ok
         else
           render json: { errors: tag.errors.full_messages }, status: :unprocessable_entity
@@ -26,6 +27,7 @@ module Api
         authorize tag
 
         if tag.destroy
+          tag.index
           render json: { message: 'Tag deleted' }, status: :ok
         else
           render json: { errors: tag.errors.full_messages }, status: :unprocessable_entity

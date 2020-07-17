@@ -32,6 +32,7 @@ module Rates
     def create_rate
       rating = user.rates.new(rateable: rateable, status: params[:status])
       if rating.save
+        Sunspot.index! rateable
         @result[:message] = 'Rate created'
         @result[:status] = :ok
         UserChangeRateJob.set(wait: 5.seconds).perform_later(rateable.user, rating.status)

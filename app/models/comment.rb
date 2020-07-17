@@ -13,6 +13,7 @@ class Comment < ApplicationRecord
 
   scope :order_by_likes, -> { left_joins(:rates).where(rates: { status: 'like' }).group(:id).order('count(rates.id) desc') }
   scope :order_by_created, -> { order(created_at: :desc) }
+  scope :fresh, -> { where('comments.created_at >= ?', now - 1.day) }
 
   searchable do
     integer :user_id

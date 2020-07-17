@@ -12,6 +12,8 @@ module Mutations
 
       raise Exceptions::ValidationError, post.errors.full_messages unless post.destroy
 
+      post.index
+
       { message: 'Post deleted' }
     end
   end

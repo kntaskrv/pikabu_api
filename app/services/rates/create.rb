@@ -14,7 +14,7 @@ module Rates
         @result[:message] = 'The same rate already exist'
         @result[:status] = :ok
       when 'diff exist'
-        @result = Rates::Delete.call(rateable.user, rate, status)
+        @result = Rates::Delete.call(rateable.user, rate, params[:status])
       end
       result
     end

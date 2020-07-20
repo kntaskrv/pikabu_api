@@ -18,6 +18,7 @@ class Comment < ApplicationRecord
   searchable do
     integer :user_id
     integer :commentable_id
+    string :commentable_type
     time :created_at
     integer :rating
   end

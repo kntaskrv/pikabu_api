@@ -17,6 +17,11 @@ group :development, :test do
   gem 'rubocop-rspec'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
+  gem 'factory_bot_rails'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers'
+  gem 'database_cleaner'
+
 end
 
 group :development do

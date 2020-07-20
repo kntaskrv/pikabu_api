@@ -34,11 +34,13 @@ services:
       - ./tmp/db:/var/lib/postgresql/data
 
   solr:
-    image: solr
+    build:
+      context: .
+      dockerfile: Dockerfile.solr
     ports:
       - "8983:8983"
     volumes:
-      - solr_data:/opt/solr/server/solr/mycores
+      - solr_data:/var/solr/data
     entrypoint:
       - docker-entrypoint.sh
       - solr-precreate

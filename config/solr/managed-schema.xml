@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="sunspot" version="1.6">
+  <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+<!--  <fieldType name="first_name_synonym" class="solr.TextField" positionIncrementGap="100" omitNorms="false">-->
+<!--    <analyzer type="index">-->
+<!--      <tokenizer class="solr.StandardTokenizerFactory"/>-->
+<!--      <filter class="solr.LowerCaseFilterFactory"/>-->
+<!--      <filter class="solr.SynonymGraphFilterFactory" synonyms="first-name-synonyms.txt"/>-->
+<!--      <filter class="solr.FlattenGraphFilterFactory"/>-->
+<!--    </analyzer>-->
+<!--    <analyzer type="query">-->
+<!--      <tokenizer class="solr.StandardTokenizerFactory"/>-->
+<!--      <filter class="solr.LowerCaseFilterFactory"/>-->
+<!--    </analyzer>-->
+<!--  </fieldType>-->
+<!--  <field name="contact_first_name_synonym" type="first_name_synonym" indexed="true" stored="true" multiValued="false"/>-->
+  <fieldType name="ngram_string" class="solr.TextField" positionIncrementGap="100" omitNorms="false">
+    <analyzer type="index">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.NGramFilterFactory" minGramSize="2" maxGramSize="50"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <dynamicField name="*_ngram_string" type="ngram_string" indexed="true" stored="true" multiValued="false"/>
+  <fieldType name="edge_ngram_string" class="solr.TextField" positionIncrementGap="100" omitNorms="false">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="20"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <dynamicField name="*_edge_ngram_string" type="edge_ngram_string" indexed="true" stored="true" multiValued="false"/>
+  <fieldType name="text" class="solr.TextField" omitNorms="false">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <dynamicField name="*_name" type="text" indexed="true" stored="true" multiValued="false"/>
+  <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+  <field name="_version_" type="plong" indexed="false" stored="false"/>
+  <field name="_root_" type="string" indexed="true" stored="false" docValues="false"/>
+  <dynamicField name="*_str" type="strings" stored="false" docValues="true" indexed="false"/>
+  <dynamicField name="attr_*" type="text_general" indexed="true" stored="true" multiValued="true"/>
+  <uniqueKey>id</uniqueKey>
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
+  <fieldType name="strings" class="solr.StrField" sortMissingLast="true" multiValued="true" docValues="true"/>
+  <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" docValues="true"/>
+  <fieldType name="booleans" class="solr.BoolField" sortMissingLast="true" multiValued="true" docValues="true"/>
+  <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
+  <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
+  <fieldType name="pint" class="solr.IntPointField" docValues="true" sortMissingLast="true"/>
+  <fieldType name="plong" class="solr.LongPointField" docValues="true" sortMissingLast="true"/>
+  <fieldType name="pdouble" class="solr.DoublePointField" docValues="true" sortMissingLast="true"/>
+  <fieldType name="pints" class="solr.IntPointField" docValues="true" multiValued="true" sortMissingLast="true"/>
+  <fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true" sortMissingLast="true"/>
+  <fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true" sortMissingLast="true"/>
+  <fieldType name="tdouble" class="solr.DoublePointField" omitNorms="true" sortMissingLast="true"/>
+  <fieldType name="rand" class="solr.RandomSortField" omitNorms="true"/>
+  <fieldType name="tint" class="solr.IntPointField" omitNorms="true" docValues="true" sortMissingLast="true"/>
+  <fieldType name="tdate" class="solr.DatePointField"
+             omitNorms="true"/>
+  <field name="type" stored="false" type="string" multiValued="true" indexed="true"/>
+  <field name="class_name" stored="false" type="string" multiValued="false" indexed="true"/>
+  <field name="text" stored="false" type="string" multiValued="true" indexed="true"/>
+  <dynamicField name="random_*" stored="false" type="rand" multiValued="false" indexed="true"/>
+  <dynamicField name="_local*" stored="false" type="tdouble" multiValued="false" indexed="true"/>
+  <dynamicField name="*_text" stored="false" type="text" multiValued="true" indexed="true"/>
+  <dynamicField name="*_texts" stored="false" type="text" multiValued="true" indexed="true"/>
+  <dynamicField name="*_b" stored="false" type="boolean" multiValued="false" indexed="true"/>
+  <dynamicField name="*_bm" stored="false" type="boolean" multiValued="true" indexed="true"/>
+  <dynamicField name="*_bs" stored="false" type="boolean" multiValued="false" indexed="true"/>
+  <dynamicField name="*_bms" stored="false" type="boolean" multiValued="true" indexed="true"/>
+  <dynamicField name="*_d" stored="false" type="tdate" multiValued="false" indexed="true"/>
+  <dynamicField name="*_dm" stored="false" type="tdate" multiValued="true" indexed="true"/>
+  <dynamicField name="*_ds" stored="false" type="tdate" multiValued="false" indexed="true"/>
+  <dynamicField name="*_dms" stored="false" type="tdate" multiValued="true" indexed="true"/>
+  <dynamicField name="*_e" stored="false" type="tdouble" multiValued="false" indexed="true"/>
+  <dynamicField name="*_em" stored="false" type="tdouble" multiValued="true" indexed="true"/>
+  <dynamicField name="*_es" stored="false" type="tdouble" multiValued="false" indexed="true"/>
+  <dynamicField name="*_ems" stored="false" type="tdouble" multiValued="true" indexed="true"/>
+  <dynamicField name="*_i" stored="false" type="tint" multiValued="false" indexed="true"/>
+  <dynamicField name="*_im" stored="false" type="tint" multiValued="true" indexed="true"/>
+  <dynamicField name="*_is" stored="false" type="tint" multiValued="false" indexed="true"/>
+  <dynamicField name="*_ims" stored="false" type="tint" multiValued="true" indexed="true"/>
+  <dynamicField name="*_l" stored="false" type="plong" multiValued="false" indexed="true"/>
+  <dynamicField name="*_lm" stored="false" type="plong" multiValued="true" indexed="true"/>
+  <dynamicField name="*_ls" stored="false" type="plong" multiValued="false" indexed="true"/>
+  <dynamicField name="*_lms" stored="false" type="plong" multiValued="true" indexed="true"/>
+  <dynamicField name="*_s" stored="false" type="string" multiValued="false" indexed="true"/>
+  <dynamicField name="*_sm" stored="false" type="string" multiValued="true" indexed="true"/>
+  <dynamicField name="*_ss" stored="false" type="string" multiValued="false" indexed="true"/>
+  <dynamicField name="*_sms" stored="false" type="string" multiValued="true" indexed="true"/>
+  <dynamicField name="*_it" stored="false" type="tint" multiValued="false" indexed="true"/>
+  <dynamicField name="*_itm" stored="false" type="tint" multiValued="true" indexed="true"/>
+  <dynamicField name="*_its" stored="false" type="tint" multiValued="false" indexed="true"/>
+  <dynamicField name="*_itms" stored="false" type="tint" multiValued="true" indexed="true"/>
+  <dynamicField name="*_lt" stored="false" type="plong" multiValued="false" indexed="true"/>
+  <dynamicField name="*_ltm" stored="false" type="plong" multiValued="true" indexed="true"/>
+  <dynamicField name="*_lts" stored="false" type="plong" multiValued="false" indexed="true"/>
+  <dynamicField name="*_ltms" stored="false" type="plong" multiValued="true" indexed="true"/>
+  <dynamicField name="*_dt" stored="false" type="tdate" multiValued="false" indexed="true"/>
+  <dynamicField name="*_dtm" stored="false" type="tdate" multiValued="true" indexed="true"/>
+  <dynamicField name="*_dts" stored="false" type="tdate" multiValued="false" indexed="true"/>
+  <dynamicField name="*_dtms" stored="false" type="tdate" multiValued="true" indexed="true"/>
+  <dynamicField name="*_textv" stored="false" termVectors="true" type="text" multiValued="true" indexed="true"/>
+  <dynamicField name="*_textsv" stored="false" termVectors="true" type="text" multiValued="true" indexed="true"/>
+  <dynamicField name="*_et" stored="false" termVectors="true" type="tdouble" multiValued="false" indexed="true"/>
+  <dynamicField name="*_etm" stored="false" termVectors="true" type="tdouble" multiValued="true" indexed="true"/>
+  <dynamicField name="*_ets" stored="false" termVectors="true" type="tdouble" multiValued="false" indexed="true"/>
+  <dynamicField name="*_etms" stored="false" termVectors="true" type="tdouble" multiValued="true" indexed="true"/>
+</schema>

@@ -38,7 +38,7 @@ module Posts
       options[:order] = POSSIBLE_ORDERS.include?(options[:order]) ? options[:order] : nil
       options[:filter] = POSSIBLE_FILTERS.include?(options[:filter]) ? options[:filter] : nil
       options[:rating] = options[:rating].to_i if options[:rating]
-      options[:tags] = options[:tags].values if options[:tags] && options[:tags].is_a?(Hash)
+      options[:tags] = options[:tags].values if options[:tags]&.is_a?(Hash)
       normalize_dates
     end
 

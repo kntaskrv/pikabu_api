@@ -3,7 +3,9 @@
 FactoryBot.define do
   factory :post do
     user
-    title { 'Title' }
+    sequence :title do |n|
+      "Title#{n}"
+    end
     description { 'Desc' }
     hot { false }
     best { false }

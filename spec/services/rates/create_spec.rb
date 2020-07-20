@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe Rates::Create do
   subject { described_class.call(user, params) }
 

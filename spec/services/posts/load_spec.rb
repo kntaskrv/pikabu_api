@@ -7,66 +7,62 @@ describe Posts::Load do
   let(:options) { {} }
 
   context 'when options is empty' do
-    before do
-      create(:post)
-      create(:post)
-      create(:post)
-      Post.reindex
-    end
+    let!(:post1) { create(:post) }
+    let!(:post2) { create(:post) }
+    let!(:post3) { create(:post) }
 
     it 'returns posts id' do
-      expect(subject.ids).to eq [18, 19, 20]
+      Post.reindex
+      expect(subject.ids).to eq [post1.id, post2.id, post3.id]
     end
   end
 
   context 'when options not empty' do
     context 'with title' do
+      let!(:post1) { create(:post, title: 'my post') }
+      let!(:post2) { create(:post, title: 'super') }
+      let!(:post3) { create(:post, title: 'title') }
+
       before do
-        create(:post, title: 'my post')
-        create(:post, title: 'super')
-        create(:post, title: 'title')
         options[:title] = 'title'
         Post.reindex
       end
 
       it 'returns posts id' do
-        expect(subject.ids).to eq [23]
+        expect(subject.ids).to eq [post3.id]
       end
     end
 
     context 'with tags' do
-      before do
-        post = create(:post)
-        create(:post)
-        create(:post)
-        tag = create(:tag)
-        post.tags << tag
-        options[:tags] = [tag.tag]
-        Post.reindex
-      end
-
-      it 'returns posts id' do
-        expect(subject.ids).to eq [24]
-      end
-    end
-
-    context 'with date' do
       let!(:post1) { create(:post) }
       let!(:post2) { create(:post) }
       let!(:post3) { create(:post) }
 
       before do
-        post1.created_at = Time.now - 2.days
-        post3.created_at = Time.now + 3.days
-        post1.save
-        post3.save
+        tag = create(:tag)
+        post1.tags << tag
+        options[:tags] = [tag.tag]
+        Post.reindex
+      end
+
+      it 'returns posts id' do
+        expect(subject.ids).to eq [post1.id]
+      end
+    end
+
+    context 'with date' do
+      let!(:post1) { create(:post, created_at: Time.now - 2.days) }
+      let!(:post2) { create(:post) }
+      let!(:post3) { create(:post, created_at: Time.now + 3.days) }
+
+      before do
         options[:date_start] = Date.current.to_s
         options[:date_end] = (Date.current + 1).to_s
         Post.reindex
       end
 
       it 'returns posts id' do
-        expect(subject.ids).to eq [28]
+        expect(subject.ids).to eq [post2.id]
       end
     end
 
@@ -82,7 +78,7 @@ describe Posts::Load do
       end
 
       it 'returns posts id' do
-        expect(subject.ids).to eq [30]
+        expect(subject.ids).to eq [post1.id]
       end
     end
 
@@ -96,7 +92,7 @@ describe Posts::Load do
       end
 
       it 'returns posts id' do
-        expect(subject.ids).to eq [33]
+        expect(subject.ids).to eq [post1.id]
       end
     end
   end
